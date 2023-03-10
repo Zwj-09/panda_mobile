@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-import { useRouter } from 'vue-router'
+import router from '@/router/index.js'
 
 const useLogin = defineStore('login', {
   state: () => ({
@@ -9,8 +9,6 @@ const useLogin = defineStore('login', {
   getters: {},
   actions: {
     setLoginInfo(payload) {
-      const router = useRouter()
-      console.log(payload)
       const token = payload.msg
       this.token = token
       localStorage.setItem('Token', token)

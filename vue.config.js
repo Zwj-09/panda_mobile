@@ -7,6 +7,7 @@ const ComponentsPlugin = require('unplugin-vue-components/webpack')
 
 module.exports = defineConfig({
   transpileDependencies: true,
+  publicPath: process.env == 'development' ? '/' : './',
   configureWebpack: {
     // 配置别名
     resolve: {

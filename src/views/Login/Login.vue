@@ -25,15 +25,22 @@
       </div>
     </div>
     <div class="btn">
-      <van-button type="primary" native-type="submit" @click="submit"
-        >登录</van-button
+      <van-button
+        type="primary"
+        :loading="isLoading"
+        loading-text="登录中..."
+        native-type="submit"
+        @click="submit"
+        :disabled="isLoading"
       >
+        登录
+      </van-button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 
 import { login } from '@/api/Login/login'
 
@@ -44,17 +51,21 @@ const loginForm = reactive({
   password: '0000'
 })
 
+const isLoading = ref(false)
+
 const Base64 = require('js-base64').Base64
 
 const useLoginStore = useLogin()
 
 const submit = () => {
+  isLoading.value = true
   login({
     loginAccount: loginForm.loginAccount,
     password: Base64.encode(loginForm.password)
   }).then((res) => {
     if (res.data.status == 200) {
       useLoginStore.setLoginInfo(res.data)
+      isLoading.value = false
     }
   })
 }
@@ -67,22 +78,22 @@ const submit = () => {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 45px;
+  padding: 0 20px;
   box-sizing: border-box;
   .logo {
-    width: 96px;
-    height: 96px;
+    width: 98px;
+    height: 98px;
     background: #0066ff;
-    border-radius: 20px;
-    margin-bottom: 48px;
+    border-radius: 10px;
+    margin-bottom: 20px;
   }
   .text {
     font-style: normal;
+    font-weight: 400;
     h1 {
-      font-weight: 400;
-      color: #2d3442;
       font-size: 48px;
       line-height: 63px;
+      color: #2d3442;
       margin-bottom: 16px;
     }
     p {
@@ -93,24 +104,24 @@ const submit = () => {
   }
 
   .forms {
-    margin: 80px 0;
+    margin: 60px 0;
     .form {
       width: 100%;
-      margin-bottom: 70px;
+      margin-bottom: 35px;
       position: relative;
       .ipt {
         width: 100%;
         border: 0;
         border-bottom: 1px solid #d9d9d9;
-        padding-bottom: 20px;
+        padding-bottom: 10px;
         &:-internal-autofill-selected {
           background-color: transparent;
         }
         &::-webkit-input-placeholder {
           font-style: normal;
           font-weight: 400;
-          font-size: 28px;
-          line-height: 42px;
+          font-size: 18px;
+          line-height: 21px;
           color: #b6c0d3;
         }
       }
@@ -127,10 +138,11 @@ const submit = () => {
   .btn {
     .van-button {
       cursor: pointer;
-      width: 684px;
+      width: 100%;
       height: 88px;
       background: #0066ff;
       border-radius: 20px;
+      font-size: 32px;
     }
   }
 }
