@@ -2,6 +2,8 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 import Index from '@/views/Home/Index.vue'
 
+import storage from '@/utils/storage'
+
 const localRoutes = [
   {
     path: '/home',
@@ -74,8 +76,9 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   document.title = to.meta.name || '中国大熊猫研究基地'
-  let cookieList = document.cookie.split('"token"=')
-  let token = cookieList[1]
+  const token = storage.get('Token')
+  // let cookieList = document.cookie.split('"token"=')
+  // let token = cookieList[1]
   if (token) {
     next()
   } else {

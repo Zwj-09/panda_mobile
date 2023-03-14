@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="index">
     <router-view></router-view>
   </div>
   <TabBar />
@@ -10,8 +10,8 @@ import TabBar from '@/components/TabBar/TabBar.vue'
 </script>
 
 <style scoped lang="less">
-.container {
-  width: 100%;
-  height: calc(100vh - 150px);
-}
+// .index {
+//   width: 100%;
+//   height: calc(100vh - 150px);
+// }
 </style>

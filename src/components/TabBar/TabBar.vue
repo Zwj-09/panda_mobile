@@ -1,6 +1,12 @@
 <template>
   <div class="container">
-    <van-tabbar v-model="active" @change="handleTabBarChange">
+    <van-tabbar
+      active-color="#2e68e1"
+      inactive-color="#999999"
+      :safe-area-inset-bottom="true"
+      v-model="active"
+      @change="handleTabBarChange"
+    >
       <van-tabbar-item
         :icon="tab.icon"
         v-for="tab in tabbarData"

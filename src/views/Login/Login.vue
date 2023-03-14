@@ -23,6 +23,9 @@
           v-model="loginForm.password"
         />
       </div>
+      <div class="erros" :class="{ shake: isShake }">
+        {{ errMsg }}
+      </div>
     </div>
     <div class="btn">
       <van-button
@@ -46,8 +49,11 @@ import { login } from '@/api/Login/login'
 
 import useLogin from '@/store/Login/Login'
 
+const errMsg = ref('')
+const isShake = ref(false)
+
 const loginForm = reactive({
-  loginAccount: 'hengszh',
+  loginAccount: 'ceszh',
   password: '0000'
 })
 
@@ -59,15 +65,37 @@ const useLoginStore = useLogin()
 
 const submit = () => {
   isLoading.value = true
-  login({
-    loginAccount: loginForm.loginAccount,
-    password: Base64.encode(loginForm.password)
-  }).then((res) => {
-    if (res.data.status == 200) {
-      useLoginStore.setLoginInfo(res.data)
-      isLoading.value = false
-    }
-  })
+  if (!loginForm.loginAccount) {
+    isShake.value = true
+    isLoading.value = false
+    errMsg.value = '请输入账号'
+    const timer = setTimeout(() => {
+      isShake.value = false
+      clearTimeout(timer)
+    }, 820)
+  } else if (!loginForm.password) {
+    isShake.value = true
+    isLoading.value = false
+    errMsg.value = '请输入密码'
+    const timer = setTimeout(() => {
+      isShake.value = false
+      clearTimeout(timer)
+    }, 820)
+  } else {
+    errMsg.value = ''
+    login({
+      loginAccount: loginForm.loginAccount,
+      password: Base64.encode(loginForm.password)
+    }).then((res) => {
+      if (res.data.status == 200) {
+        useLoginStore.setLoginInfoAction(res.data)
+        isLoading.value = false
+      } else {
+        isLoading.value = false
+        errMsg.value = res.data.msg
+      }
+    })
+  }
 }
 </script>
 
@@ -107,7 +135,7 @@ const submit = () => {
     margin: 60px 0;
     .form {
       width: 100%;
-      margin-bottom: 35px;
+      margin-bottom: 20px;
       position: relative;
       .ipt {
         width: 100%;
@@ -134,6 +162,12 @@ const submit = () => {
         color: red;
       }
     }
+    .erros {
+      color: red;
+      font-size: 16px;
+      width: 100%;
+      height: 50px;
+    }
   }
   .btn {
     .van-button {
@@ -144,6 +178,33 @@ const submit = () => {
       border-radius: 20px;
       font-size: 32px;
     }
+  }
+}
+
+.shake {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
   }
 }
 </style>
